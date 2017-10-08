@@ -24,6 +24,14 @@ Route::group(array('prefix' => 'projects'), function()
     Route::get('/', "{$ctrlName}@projectsReturn");
 
 
+    //show that particular project, some cms stuff plus an array of pieces
+    Route::get('/{prid}', "{$ctrlName}@projectById")->where('prid', '^[0-9]+$');
+
+    //same as above, but name based instead
+    Route::get('/{prName}', "{$ctrlName}@projectByName")->where('prName', '[A-Za-z]+');
+    
+
+
     // First Route, show projects by author, numerical
     Route::get('/developer/{dId}', "{$ctrlName}@projectsByDeveloperId")->where('dId', '^[0-9]+$');
 
@@ -35,14 +43,6 @@ Route::group(array('prefix' => 'projects'), function()
     Route::get('/client/{cId}', "{$ctrlName}@projectsByClientId")->where('cId', '^[0-9]+$');
 
     Route::get('/client/{cName}', "{$ctrlName}@projectsByClientName")->where('cName', '[A-Za-z]+');
-
-
-    //show that particular project, some cms stuff plus an array of pieces
-    Route::get('/{prid}', "{$ctrlName}@projectById")->where('prid', '^[0-9]+$');
-
-    //same as above, but name based instead
-    Route::get('/{prName}', "{$ctrlName}@projectByName")->where('prName', '[A-Za-z]+');
-
 
     // before and after, numerical array of projects with each member having both a before and after screenshot
     Route::get('/before-after/{which?}', "{$ctrlName}@beforeAfter");
