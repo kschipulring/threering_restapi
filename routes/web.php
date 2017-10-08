@@ -18,37 +18,40 @@ Route::get('/', function() {
 Route::group(array('prefix' => 'projects'), function()
 {
 
-    $ctrlName = 'ProjectsDisplayController';
+	$ctrlName = 'ProjectsDisplayController';
 
-    //show all projects. 'page' is for pagination
-    Route::get('/', "{$ctrlName}@projectsReturn");
-
-
-    //show that particular project, some cms stuff plus an array of pieces
-    Route::get('/{prid}', "{$ctrlName}@projectById")->where('prid', '^[0-9]+$');
-
-    //same as above, but name based instead
-    Route::get('/{prName}', "{$ctrlName}@projectByName")->where('prName', '[A-Za-z]+');
-    
+	//show all projects. 'page' is for pagination
+	Route::get('/', "{$ctrlName}@projectsReturn");
 
 
-    // First Route, show projects by author, numerical
-    Route::get('/developer/{dId}', "{$ctrlName}@projectsByDeveloperId")->where('dId', '^[0-9]+$');
+	//show that particular project, some cms stuff plus an array of pieces
+	/*Route::get('/{prid}', "{$ctrlName}@projectById")->where('prid', '^[0-9]+$');
 
-    //name based
-    Route::get('/developer/{dName}', "{$ctrlName}@projectsByDeveloperName")->where('dName', '[A-Za-z]+');
+	//same as above, but name based instead
+	Route::get('/{prName}', "{$ctrlName}@projectByName")->where('prName', '[A-Za-z]+');*/
 
 
-    //projects by client
-    Route::get('/client/{cId}', "{$ctrlName}@projectsByClientId")->where('cId', '^[0-9]+$');
+	Route::get('/developer', "{$ctrlName}@projectsReturn");
 
-    Route::get('/client/{cName}', "{$ctrlName}@projectsByClientName")->where('cName', '[A-Za-z]+');
+	/*
+	// First Route, show projects by author, numerical
+	Route::get('/developer/{dId}', "{$ctrlName}@projectsByDeveloperId")->where('dId', '^[0-9]+$');
 
-    // before and after, numerical array of projects with each member having both a before and after screenshot
-    Route::get('/before-after/{which?}', "{$ctrlName}@beforeAfter");
+	//name based
+	Route::get('/developer/{dName}', "{$ctrlName}@projectsByDeveloperName")->where('dName', '[A-Za-z]+');
 
-    // get the project tags
-    Route::get('/project-tags', "{$ctrlName}@allProjectTags");
+
+	//projects by client
+	Route::get('/client/{cId}', "{$ctrlName}@projectsByClientId")->where('cId', '^[0-9]+$');
+
+	Route::get('/client/{cName}', "{$ctrlName}@projectsByClientName")->where('cName', '[A-Za-z]+');
+
+	// before and after, numerical array of projects with each member having both a before and after screenshot
+	Route::get('/before-after/{which?}', "{$ctrlName}@beforeAfter");
+
+	// get the project tags
+	Route::get('/project-tags', "{$ctrlName}@allProjectTags");
+    */
 });
 
 
