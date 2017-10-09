@@ -22,7 +22,7 @@ class ProjectsDisplayController extends Controller
 	public function projectsByDeveloperId($did){
 
 		$projects = \App\Projects::listings()
-		->where("pe2.id", "=", $aid)
+		->where("pe2.id", "=", $did)
 		->paginate( $this->resultsPerPage );
 
 		return response()->json($projects);
@@ -31,7 +31,7 @@ class ProjectsDisplayController extends Controller
 	public function projectsByDeveloperName($dName){
 
 		$projects = \App\Projects::listings()
-		->where("pe2.name", "LIKE", "%{$aName}%")
+		->where("pe2.name", "LIKE", "%{$dName}%")
 		->paginate( $this->resultsPerPage );
 
 		return response()->json($projects);
@@ -89,29 +89,51 @@ class ProjectsDisplayController extends Controller
 
 
 	public function beforeAfter($which=''){
-		$T_PROJECT_META = $_ENV["T_PROJECT_META"];
-		$T_PROJECTS = $_ENV["T_PROJECTS"];
 		$T_PROJECT_PIECES = $_ENV["T_PROJECT_PIECES"];
+		$T_PROJECT_META = $_ENV["T_PROJECT_META"];
 
 		$whereArr = array();
-		$whereArr[0] = ["meta_key", "=", "before_after_pieces"];
+		$whereArr[0] = ["pm.meta_key", "=", "before_after_pieces"];
 
 		$which = trim($which);
+
+
+		/*
+SELECT pp.id, pp.file_name, pp.thumb_file_override, pp.thumb_Coords, pp.live_url, pp.name, pm.proj_id
+FROM `project_pieces` pp, `project_meta` pm 
+WHERE pp.id IN (126,135)
+AND pm.meta_key = "before_after_pieces"
+		*/
 
 		if( strlen($which) > 2 && preg_match("/^[0-9]+\,+[0-9]+\,+[0-9]+$/", $which) ){
 			list($projId, $beforeAfter) = explode(",", $which, 2);
 
-			$whereArr[1] = ["proj_id", "=", $projId];
-			$whereArr[1] = ["meta_value", "=", $beforeAfter];
+			/*$whereArr[1] = ["pm.proj_id", "=", $projId];
+			$whereArr[1] = ["pm.meta_value", "=", '"'. $beforeAfter . '"'];*/
+
+			
+			$results = DB::select( DB::raw("SELECT pp.id, pp.file_name, pp.thumb_file_override, pp.thumb_Coords, pp.live_url, pp.name, pm.proj_id
+			 FROM {$T_PROJECT_PIECES} AS pp, {$T_PROJECT_META} AS pm
+			 WHERE pp.id IN ({$beforeAfter})
+			 AND pm.meta_key = 'before_after_pieces'") );
+
+			return response()->json( $results );
+		} else {
+			return 0;
 		}
 
-		$projectTags = DB::table( "{$T_PROJECT_META} AS pm" )
-		->select( "pm.proj_id AS p", "pm.meta_value AS mv", "pr.name", DB::raw("GROUP_CONCAT(pp.pttid) AS pttids") )
-		->leftJoin("{$T_PROJECTS} AS pr", "pm.proj_id", "=", "pr.id")
+		/*$projectTags = DB::table( "{$T_PROJECT_PIECES} AS pp, {$T_PROJECT_META} AS pm" )
+		->select( "pp.id", "pp.file_name", "pp.thumb_file_override", "pp.thumb_Coords", "pp.live_url", "pp.name", "pm.proj_id" )
 		->where( $whereArr )
-		->paginate( $this->resultsPerPage );
+		->paginate( $this->resultsPerPage );*/
 
-		return response()->json($projectTags);
+		/*$results = DB::select( DB::raw("SELECT * FROM some_table WHERE some_col = '$someVariable'") );
+
+		return response()->json($projectTags);*/
+
+		//var_dump( dd(DB::getQueryLog()) );
+
+		//return 0;
 	}
 
 	public function caseStudies( $prId=0 ){

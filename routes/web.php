@@ -20,38 +20,37 @@ Route::group(array('prefix' => 'projects'), function()
 
 	$ctrlName = 'ProjectsDisplayController';
 
+	$numPattern = '^[0-9]+$';
+	$namePattern = '[A-Za-z]+[A-Za-z\-\_\s]{0,}';
+
 	//show all projects. 'page' is for pagination
 	Route::get('/', "{$ctrlName}@projectsReturn");
-
-
-	//show that particular project, some cms stuff plus an array of pieces
-	/*Route::get('/{prid}', "{$ctrlName}@projectById")->where('prid', '^[0-9]+$');
-
-	//same as above, but name based instead
-	Route::get('/{prName}', "{$ctrlName}@projectByName")->where('prName', '[A-Za-z]+');*/
-
-
-	Route::get('/developer', "{$ctrlName}@projectsReturn");
-
-	/*
+	
 	// First Route, show projects by author, numerical
-	Route::get('/developer/{dId}', "{$ctrlName}@projectsByDeveloperId")->where('dId', '^[0-9]+$');
+	Route::get('/developer/{dId}', "{$ctrlName}@projectsByDeveloperId")->where('dId', $numPattern);
 
 	//name based
-	Route::get('/developer/{dName}', "{$ctrlName}@projectsByDeveloperName")->where('dName', '[A-Za-z]+');
+	Route::get('/developer/{dName}', "{$ctrlName}@projectsByDeveloperName")->where('dName', $namePattern);
 
 
 	//projects by client
-	Route::get('/client/{cId}', "{$ctrlName}@projectsByClientId")->where('cId', '^[0-9]+$');
+	Route::get('/client/{cId}', "{$ctrlName}@projectsByClientId")->where('cId', $numPattern);
 
-	Route::get('/client/{cName}', "{$ctrlName}@projectsByClientName")->where('cName', '[A-Za-z]+');
+	Route::get('/client/{cName}', "{$ctrlName}@projectsByClientName")->where('cName', $namePattern);
+
 
 	// before and after, numerical array of projects with each member having both a before and after screenshot
 	Route::get('/before-after/{which?}', "{$ctrlName}@beforeAfter");
 
 	// get the project tags
 	Route::get('/project-tags', "{$ctrlName}@allProjectTags");
-    */
+
+
+	//show that particular project, some cms stuff plus an array of pieces
+	Route::get('/{prid}', "{$ctrlName}@projectById")->where('prid', '^[0-9]+$');
+
+	//same as above, but name based instead
+	Route::get('/{prName}', "{$ctrlName}@projectByName")->where('prName', '[A-Za-z]+');
 });
 
 
